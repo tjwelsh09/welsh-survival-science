@@ -11,25 +11,26 @@ dotenv.config(); // Load .env variables
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MongoDB Connection
+// ✅ MongoDB Connection (Fixed .then syntax)
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-});
-then(() => {
-  console.log('✅ Connected to MongoDB');
-}).catch((err) => {
+})
+.then(() => {
+  console.log('✅ Connected to MongoDB Atlas');
+})
+.catch((err) => {
   console.error('❌ MongoDB connection error:', err);
 });
 
-// User Schema
+// ✅ User Schema
 const userSchema = new mongoose.Schema({
   email: String,
   password: String // In production, hash passwords!
 });
 const User = mongoose.model('User', userSchema);
 
-// Middleware
+// ✅ Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -39,41 +40,48 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // ⬅️ Ensures secure cookie on Render
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 1000 * 60 * 60 * 2 // 2 hours
   }
 }));
 
-// Serve static files from /public
+// ✅ Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- AUTH ROUTES ---
-
+// ✅ Auth Routes
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
-  const existing = await User.findOne({ email });
-  if (existing) return res.status(400).json({ error: 'Email already registered' });
+  try {
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ error: 'Email already registered' });
 
-  const newUser = new User({ email, password });
-  await newUser.save();
+    const newUser = new User({ email, password });
+    await newUser.save();
 
-  res.json({ message: 'User registered successfully' });
+    res.json({ message: 'User registered successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Registration failed' });
+  }
 });
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user || user.password !== password) {
-    return res.status(401).json({ error: 'Invalid email or password' });
+  try {
+    const user = await User.findOne({ email });
+    if (!user || user.password !== password) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    req.session.userId = user._id;
+    req.session.email = user.email;
+
+    res.json({ message: 'Login successful' });
+  } catch (err) {
+    res.status(500).json({ error: 'Login failed' });
   }
-
-  req.session.userId = user._id;
-  req.session.email = user.email;
-
-  res.json({ message: 'Login successful' });
 });
 
 app.get('/session', (req, res) => {
@@ -92,8 +100,7 @@ app.post('/logout', (req, res) => {
   });
 });
 
-// --- STRIPE CHECKOUT ROUTE ---
-
+// ✅ Stripe Checkout
 app.post('/create-checkout-session', async (req, res) => {
   if (!req.session.userId) {
     return res.status(403).json({ error: 'User must be logged in to purchase' });
@@ -130,7 +137,7 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// --- START SERVER ---
+// ✅ Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
