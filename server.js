@@ -9,7 +9,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 dotenv.config(); // Load .env variables
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // MongoDB Connection
 mongoose.connect('mongodb://localhost:27017/codex-users', {
@@ -24,7 +24,7 @@ mongoose.connect('mongodb://localhost:27017/codex-users', {
 // User Schema
 const userSchema = new mongoose.Schema({
   email: String,
-  password: String // WARNING: hash passwords in production!
+  password: String // In production, hash passwords!
 });
 const User = mongoose.model('User', userSchema);
 
@@ -33,16 +33,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
-  secret: 'survival-secret-key',
+  secret: process.env.SESSION_SECRET_KEY || 'survival-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // ⬅️ Ensures secure cookie on Render
+    sameSite: 'lax',
     maxAge: 1000 * 60 * 60 * 2 // 2 hours
   }
 }));
 
-// Serve static files
+// Serve static files from /public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // --- AUTH ROUTES ---
@@ -113,8 +115,8 @@ app.post('/create-checkout-session', async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:3000/success.html',
-      cancel_url: 'http://localhost:3000/cancel.html',
+      success_url: 'https://welsh-survival-science.onrender.com/success.html',
+      cancel_url: 'https://welsh-survival-science.onrender.com/cancel.html',
       metadata: {
         userEmail: req.session.email
       }
