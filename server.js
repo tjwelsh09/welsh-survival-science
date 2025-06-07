@@ -6,12 +6,12 @@ const path = require('path');
 const dotenv = require('dotenv');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-dotenv.config(); // Load .env variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ MongoDB Connection (Fixed .then syntax)
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -50,18 +50,25 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ Auth Routes
+
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
+  console.log("📨 Attempting registration:", email);
 
   try {
     const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ error: 'Email already registered' });
+    if (existing) {
+      console.log("⚠️ Email already registered:", email);
+      return res.status(400).json({ error: 'Email already registered' });
+    }
 
     const newUser = new User({ email, password });
     await newUser.save();
+    console.log("✅ New user saved:", email);
 
     res.json({ message: 'User registered successfully' });
   } catch (err) {
+    console.error("❌ Registration error:", err);
     res.status(500).json({ error: 'Registration failed' });
   }
 });
