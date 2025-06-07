@@ -12,10 +12,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/codex-users', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => {
+});
+then(() => {
   console.log('✅ Connected to MongoDB');
 }).catch((err) => {
   console.error('❌ MongoDB connection error:', err);
