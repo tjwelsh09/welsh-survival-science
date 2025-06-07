@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank You – Welsh’s Survival Science</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Roboto', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #background-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: -1;
+    }
+
+    .mute-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #111;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+      font-weight: bold;
+    }
+
+    header {
+      background: rgba(44, 62, 80, 0.95);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      position: relative;
+    }
+
+    header img {
+      width: 50px;
+      margin-right: 15px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    main {
+      min-height: calc(100vh - 120px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    footer {
+      background: rgba(44, 62, 80, 0.95);
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 0.9rem;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop id="background-video">
+    <source src="videos/forest-loop.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Audio -->
+  <audio id="forest-audio" loop>
+    <source src="audio/forest-sounds.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Mute Button -->
+  <button class="mute-btn" onclick="toggleAudio()">Unmute</button>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Header -->
+  <header>
+    <img src="images/Survival-logo.png" alt="Logo" />
+    <h1>Welsh’s Survival Science</h1>
+  </header>
+
+  <!-- Main Thank You Message -->
+  <main>
+    <div class="container">
+      <h2>Thank You!</h2>
+      <p>Your submission has been received. We'll be in touch soon.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Welsh’s Survival Science. All rights reserved.
+  </footer>
+
+  <!-- Audio Script -->
+  <script>
+    const audio = document.getElementById('forest-audio');
+    const muteBtn = document.querySelector('.mute-btn');
+
+    function toggleAudio() {
+      if (audio.paused || audio.muted) {
+        audio.muted = false;
+        audio.play();
+        muteBtn.textContent = 'Mute';
+      } else {
+        audio.muted = true;
+        muteBtn.textContent = 'Unmute';
+      }
+    }
+
+    window.addEventListener('load', () => {
+      audio.play().catch(() => {
+        muteBtn.textContent = 'Unmute';
+      });
+    });
+  </script>
+
+</body>
+</html>

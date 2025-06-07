@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About - Welsh’s Survival Science</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Roboto', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #background-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -2;
+      object-fit: cover;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: -1;
+    }
+
+    header {
+      background: rgba(44, 62, 80, 0.95);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    header img {
+      width: 50px;
+      margin-right: 10px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .mute-btn {
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      z-index: 2;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 800px;
+      width: 90%;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .container img {
+      width: 150px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      color: #2c3e50;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    footer {
+      background: rgba(44, 62, 80, 0.95);
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <video autoplay loop muted id="background-video">
+    <source src="videos/forest-loop.mp4" type="video/mp4">
+  </video>
+
+  <audio id="forest-audio" loop>
+    <source src="audio/forest-sounds.mp3" type="audio/mp3">
+  </audio>
+
+  <div class="overlay"></div>
+
+  <header>
+    <div class="logo-container">
+      <img src="images/Survival-logo.png" alt="Logo">
+      <h1>Welsh’s Survival Science</h1>
+    </div>
+    <nav>
+      <a href="/index.html">Home</a>
+      <a href="/login.html">Login</a>
+      <a href="/register.html">Register</a>
+      <a href="/product.html">Products</a>
+      <a href="/about.html">About</a>
+    </nav>
+    <button class="mute-btn" onclick="toggleAudio()">Unmute</button>
+  </header>
+
+  <main>
+  <div class="container" style="text-align: center;">
+    <img src="images/tim-glacier.png" alt="Mr. Welsh on a Glacier" style="width: 200px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.4); margin-bottom: 25px;" />
+
+    <h2 style="font-size: 2.2rem; color: #2c3e50; margin-bottom: 20px;">About Welsh’s Survival Science</h2>
+
+    <p style="font-size: 1.2rem; line-height: 1.8; max-width: 800px; margin: 0 auto; color: #333;">
+      At Welsh’s Survival Science, we believe learning should be more than memorizing facts. Our curriculum blends high-quality science instruction with real-world survival skills—helping students explore, think critically, and thrive in every environment.
+    </p>
+
+    <p style="font-size: 1.2rem; line-height: 1.8; max-width: 800px; margin: 20px auto; color: #333;">
+      Founded by science teacher and outdoor adventurer Mr. Welsh, this platform equips educators with hands-on tools to bring chemistry, biology, and physics to life—whether in the classroom or the wild.
+    </p>
+
+    <p style="font-size: 1.2rem; line-height: 1.8; max-width: 800px; margin: 0 auto; color: #333;">
+      Ready to explore? Let’s turn learning into an unforgettable adventure.
+    </p>
+  </div>
+</main>
+
+  <footer>
+    © 2025 Welsh’s Survival Science. All rights reserved.
+  </footer>
+
+  <script>
+    const audio = document.getElementById('forest-audio');
+    const muteBtn = document.querySelector('.mute-btn');
+
+    function toggleAudio() {
+      if (audio.paused || audio.muted) {
+        audio.muted = false;
+        audio.play();
+        muteBtn.textContent = 'Mute';
+      } else {
+        audio.muted = true;
+        muteBtn.textContent = 'Unmute';
+      }
+    }
+
+    window.addEventListener('load', () => {
+      audio.play().catch(() => {
+        audio.muted = true;
+      });
+    });
+  </script>
+</body>
+</html>
